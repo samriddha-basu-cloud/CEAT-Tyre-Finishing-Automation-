@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tyre Finishing Pro | CEAT Tyres Nashik Plant</title>
+<link rel="icon" type="image/png" href="assets/ceat_logo.png">
+<style>
+/* ── CEAT Design Tokens ─────────────────────────────────── */
+:root {
+  --blue:        #2B3990;
+  --blue-dark:   #1a2460;
+  --blue-mid:    #3d4fad;
+  --blue-light:  #eaecf8;
+  --blue-xlight: #f4f5fc;
+  --orange:      #e8420d;
+  --orange-light:#fdf0eb;
+  --white:       #ffffff;
+  --grey-50:     #f7f8fa;
+  --grey-100:    #eef0f5;
+  --grey-200:    #d8dce8;
+  --grey-300:    #b0b8cc;
+  --grey-400:    #8590a8;
+  --grey-600:    #5a6480;
+  --grey-700:    #3d4560;
+  --grey-900:    #1a1f35;
+  --green:       #1a8a4a;
+  --green-light: #e6f5ec;
+  --red:         #c0392b;
+  --red-light:   #fdf0ee;
+  --shadow-sm:   0 1px 4px rgba(0,0,0,.07);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,.13);
+  --radius:      6px;
+  --radius-lg:   10px;
+  --radius-xl:   16px;
+  --font:        'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --sidebar-w:   240px;
+}
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); color: var(--grey-900); background: #f0f2f8; min-height: 100vh; }
+
+/* ── Shell ──────────────────────────────────────────────── */
+.shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Sidebar ────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--blue-dark);
+  display: flex; flex-direction: column;
+  box-shadow: 3px 0 16px rgba(0,0,0,.22);
+  z-index: 100; transition: transform .25s ease;
+  position: relative;
+}
+.sidebar-logo-wrap {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  background: var(--blue);
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 0;
+}
+.sidebar-logo img {
+  height: 36px; width: auto; display: block; border-radius: 4px;
+}
+.logo-sub {
+  margin-top: 6px; font-size: 9.5px; color: rgba(255,255,255,.55);
+  font-weight: 500; letter-spacing: .8px; text-transform: uppercase;
+}
+
+.sidebar-nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+.nav-section-label {
+  padding: 14px 18px 4px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.4px;
+  color: rgba(255,255,255,.35); text-transform: uppercase;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px;
+  color: rgba(255,255,255,.70);
+  cursor: pointer; border-left: 3px solid transparent;
+  transition: background .12s, color .12s, border-color .12s;
+  font-size: 13px; font-weight: 500; user-select: none;
+}
+.nav-item:hover { background: rgba(255,255,255,.07); color: var(--white); }
+.nav-item.active {
+  background: rgba(255,255,255,.11); color: var(--white);
+  border-left-color: var(--orange); font-weight: 600;
+}
+.nav-icon { width: 18px; font-size: 15px; text-align: center; flex-shrink: 0; opacity: .75; }
+.nav-item.active .nav-icon, .nav-item:hover .nav-icon { opacity: 1; }
+
+.sidebar-footer {
+  padding: 12px 18px; border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 10px; color: rgba(255,255,255,.35); line-height: 1.6;
+}
+
+/* ── Hamburger (mobile) ─────────────────────────────────── */
+.hamburger {
+  display: none; align-items: center; justify-content: center;
+  width: 38px; height: 38px; cursor: pointer; border-radius: var(--radius);
+  background: transparent; border: none; flex-shrink: 0;
+}
+.hamburger span {
+  display: block; width: 20px; height: 2px; background: var(--grey-700);
+  border-radius: 2px; transition: all .2s;
+  position: relative;
+}
+.hamburger span::before, .hamburger span::after {
+  content: ''; position: absolute; left: 0; width: 100%; height: 2px;
+  background: var(--grey-700); border-radius: 2px;
+}
+.hamburger span::before { top: -6px; }
+.hamburger span::after  { top: 6px; }
+
+/* ── Overlay (mobile) ───────────────────────────────────── */
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99;
+}
+
+/* ── Main ───────────────────────────────────────────────── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── Top Bar ────────────────────────────────────────────── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--grey-200);
+  padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 54px; flex-shrink: 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  gap: 10px;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.topbar-title {
+  font-size: 15px; font-weight: 700; color: var(--grey-900);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-sub { font-size: 11.5px; color: var(--grey-400); white-space: nowrap; display: none; }
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.badge {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+  letter-spacing: .4px; white-space: nowrap;
+}
+.badge-plant   { background: var(--blue-light);   color: var(--blue);   }
+.badge-version { background: var(--orange-light);  color: var(--orange); }
+
+/* ── Page wrap ──────────────────────────────────────────── */
+.page-wrap { flex: 1; overflow-y: auto; background: #f0f2f8; }
+.page { display: none; padding: 20px; }
+.page.active { display: block; }
+
+/* ── Cards ──────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+.card-header {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--grey-100);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.card-title {
+  font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .9px; color: var(--blue);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title::before {
+  content: ''; display: inline-block;
+  width: 3px; height: 14px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--orange), #f47c4a);
+  flex-shrink: 0;
+}
+.card-body { padding: 16px 18px; }
+
+/* ── Spec Grid (replaces tile strip for tech specs) ─────── */
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.spec-cell {
+  background: var(--white);
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  position: relative;
+}
+.spec-cell.accent { background: var(--blue); }
+.spec-cell.orange { background: var(--orange); }
+.spec-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--grey-400);
+}
+.spec-cell.accent .spec-label { color: rgba(255,255,255,.65); }
+.spec-cell.orange .spec-label { color: rgba(255,255,255,.75); }
+.spec-value {
+  font-size: 18px; font-weight: 700; color: var(--grey-900);
+  line-height: 1.15; font-variant-numeric: tabular-nums;
+}
+.spec-cell.accent .spec-value { color: var(--white); }
+.spec-cell.orange .spec-value { color: var(--white); font-size: 22px; }
+.spec-unit {
+  font-size: 10px; color: var(--grey-400); font-weight: 500;
+}
+.spec-cell.accent .spec-unit { color: rgba(255,255,255,.55); }
+.spec-cell.orange .spec-unit { color: rgba(255,255,255,.7); }
+.spec-divider { background: var(--grey-200); width: 1px; }
+
+/* ── KPI strip (for other pages / output section) ───────── */
+.kpi-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.kpi {
+  background: var(--white); border: 1px solid var(--grey-200);
+  border-radius: var(--radius-lg); padding: 13px 16px;
+  flex: 1; min-width: 130px; box-shadow: var(--shadow-sm);
+}
+.kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--grey-400); margin-bottom: 5px; }
+.kpi-value { font-size: 20px; font-weight: 700; color: var(--grey-900); line-height: 1; }
+.kpi-unit  { font-size: 10.5px; color: var(--grey-400); margin-top: 3px; }
+.kpi.accent  { border-left: 3px solid var(--orange); }
+.kpi.primary { border-left: 3px solid var(--blue); }
+.kpi.success { border-left: 3px solid var(--green); background: var(--green-light); }
+.kpi.danger  { border-left: 3px solid var(--red);   background: var(--red-light);   }
+.kpi.success .kpi-value { color: var(--green); }
+.kpi.danger  .kpi-value { color: var(--red);   }
+
+/* ── Status pills ───────────────────────────────────────── */
+.status-ok   { display:inline-block; background:var(--green-light); color:var(--green); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
+.status-warn { display:inline-block; background:var(--red-light);   color:var(--red);   font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
+
+/* ── Tables ─────────────────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.data-table thead tr { background: var(--blue); }
+.data-table thead th {
+  padding: 9px 10px; text-align: left; font-weight: 600;
+  font-size: 10.5px; letter-spacing: .3px; white-space: nowrap; color: var(--white);
+}
+.data-table tbody tr:nth-child(even) { background: var(--grey-50); }
+.data-table tbody tr:hover { background: var(--blue-xlight); }
+.data-table tbody td { padding: 7px 10px; border-bottom: 1px solid var(--grey-100); vertical-align: middle; }
+.data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.table-scroll { overflow-x: auto; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+
+/* ── Inputs ─────────────────────────────────────────────── */
+input[type=text], input[type=number], select, textarea {
+  font-family: var(--font); font-size: 13px;
+  padding: 7px 10px; border: 1px solid var(--grey-200);
+  border-radius: var(--radius); background: var(--white); color: var(--grey-900);
+  outline: none; transition: border-color .15s, box-shadow .15s;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--blue-mid);
+  box-shadow: 0 0 0 3px rgba(43,57,144,.10);
+}
+input[readonly], input.calc {
+  background: var(--grey-50); color: var(--grey-600); cursor: default;
+  border-color: var(--grey-100);
+}
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--radius);
+  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  border: none; transition: all .15s; font-family: var(--font);
+  white-space: nowrap;
+}
+.btn-primary { background: var(--blue); color: var(--white); }
+.btn-primary:hover { background: var(--blue-mid); }
+.btn-orange  { background: var(--orange); color: var(--white); }
+.btn-orange:hover { filter: brightness(1.08); }
+.btn-outline { background: var(--white); color: var(--blue); border: 1.5px solid var(--blue); }
+.btn-outline:hover { background: var(--blue-light); }
+.btn-danger  { background: var(--red); color: var(--white); }
+.btn-danger:hover { filter: brightness(1.08); }
+.btn-sm { padding: 5px 12px; font-size: 11.5px; }
+
+/* ── Form helpers ───────────────────────────────────────── */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-label { font-size: 10.5px; font-weight: 700; color: var(--grey-700); text-transform: uppercase; letter-spacing: .5px; }
+.form-hint  { font-size: 10px; color: var(--grey-400); }
+
+/* ── Progress bar ───────────────────────────────────────── */
+.progress-bar { background: var(--grey-100); border-radius: 8px; height: 7px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 8px; background: var(--blue); transition: width .3s; }
+.progress-fill.orange { background: var(--orange); }
+.progress-fill.red    { background: var(--red); }
+
+/* ── Alert banners ──────────────────────────────────────── */
+.alert { padding: 10px 14px; border-radius: var(--radius); font-size: 12.5px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+.alert-danger  { background: var(--red-light);   color: var(--red);   border-left: 3px solid var(--red); }
+.alert-success { background: var(--green-light);  color: var(--green); border-left: 3px solid var(--green); }
+.alert-info    { background: var(--blue-light);   color: var(--blue);  border-left: 3px solid var(--blue); }
+
+/* ── Divider ────────────────────────────────────────────── */
+hr.divider { border: none; border-top: 1px solid var(--grey-100); margin: 16px 0; }
+
+/* ── Page header ────────────────────────────────────────── */
+.page-header { margin-bottom: 18px; }
+.page-header h1 { font-size: 19px; font-weight: 700; color: var(--grey-900); }
+.page-header p  { font-size: 12.5px; color: var(--grey-400); margin-top: 4px; }
+
+/* ── Toast ──────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  background: var(--grey-900); color: var(--white);
+  padding: 10px 18px; border-radius: var(--radius-lg);
+  font-size: 12.5px; box-shadow: var(--shadow-lg);
+  display: none; align-items: center; gap: 8px;
+  max-width: calc(100vw - 40px);
+}
+#toast.show    { display: flex; }
+#toast.success { background: var(--green); }
+#toast.error   { background: var(--red); }
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--grey-100); }
+::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 3px; }
+
+/* ── Servicer badge ─────────────────────────────────────── */
+.svc-badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 700; padding: 4px 14px;
+  border-radius: 4px; letter-spacing: .6px;
+}
+.svc-badge-a { background: var(--blue);   color: var(--white); }
+.svc-badge-b { background: var(--orange); color: var(--white); }
+
+/* ── MOBILE ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .shell { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 200;
+    transform: translateX(-100%); width: 260px;
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.show { display: block; }
+
+  .main { flex: 1; overflow: visible; min-height: 100vh; }
+  .page-wrap { overflow: visible; }
+  .page { padding: 12px; }
+
+  .topbar { padding: 0 12px; height: 50px; }
+  .topbar-title { font-size: 13px; }
+  .badge-plant { display: none; }
+  .hamburger { display: flex; }
+
+  .spec-grid { grid-template-columns: repeat(2, 1fr); }
+  .spec-cell.orange { grid-column: span 2; }
+
+  .kpi-strip { gap: 8px; }
+  .kpi { min-width: calc(50% - 4px); flex: none; padding: 10px 12px; }
+  .kpi-value { font-size: 17px; }
+
+  .form-grid { grid-template-columns: 1fr 1fr; }
+
+  .data-table { font-size: 11px; }
+  .data-table thead th { padding: 7px 6px; font-size: 9.5px; }
+  .data-table tbody td { padding: 6px 6px; }
+
+  .card-header { padding: 10px 14px; }
+  .card-body   { padding: 12px 14px; }
+
+  .btn { font-size: 11.5px; padding: 6px 12px; }
+
+  .kpi-strip .kpi:nth-child(n+5) { display: none; }
+}
+@media (min-width: 769px) {
+  .topbar-sub { display: block; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="shell">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo-wrap">
+      <div class="sidebar-logo">
+        <img src="assets/ceat_logo.png" alt="CEAT Tyres">
+      </div>
+      <div class="logo-sub">Nashik Plant <br> Tyre Finishing Pro</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Operations</div>
+      <div class="nav-item active" onclick="navigate('dashboard',this)">
+        <span class="nav-icon">&#9783;</span> Operator Dashboard
+      </div>
+      <div class="nav-item" onclick="navigate('tyre-finishing',this)">
+        <span class="nav-icon">&#9776;</span> Tyre Finishing
+      </div>
+      <div class="nav-item" onclick="navigate('cut-calculator',this)">
+        <span class="nav-icon">&#9965;</span> Cut Calculator
+      </div>
+      <div class="nav-section-label">Reference</div>
+      <div class="nav-item" onclick="navigate('master-data',this)">
+        <span class="nav-icon">&#9881;</span> Master Data
+      </div>
+      <div class="nav-item" onclick="navigate('const-config',this)">
+        <span class="nav-icon">&#9878;</span> CONST Config
+      </div>
+      <div class="nav-section-label">System</div>
+      <div class="nav-item" onclick="navigate('settings',this)">
+        <span class="nav-icon">&#9741;</span> Settings &amp; Export
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      Tyre Finishing Pro &nbsp;|&nbsp; <span id="current-datetime"></span><br>
+      &copy; CEAT Tyres Ltd. Nashik Plant
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+          <span></span>
+        </button>
+        <span class="topbar-title" id="topbar-title">Operator Dashboard</span>
+        <span class="topbar-sub" id="topbar-sub">Single GT Code command view</span>
+      </div>
+      <div class="topbar-right">
+        <span class="badge badge-plant">Nashik</span>
+        <span class="badge badge-version">v1.0</span>
+      </div>
+    </div>
+
+    <!-- Pages -->
+    <div class="page-wrap">
+      <div class="page active" id="page-dashboard"></div>
+      <div class="page" id="page-tyre-finishing"></div>
+      <div class="page" id="page-cut-calculator"></div>
+      <div class="page" id="page-master-data"></div>
+      <div class="page" id="page-const-config"></div>
+      <div class="page" id="page-settings"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+<script src="tyre-finishing.js"></script>
+<script src="cut-calculator.js"></script>
+<script src="master-data.js"></script>
+<script src="const-config.js"></script>
+<script src="settings.js"></script>
+<script>
+const PAGE_META = {
+  'dashboard':      { title: 'Operator Dashboard',     sub: 'Single GT Code command view' },
+  'tyre-finishing': { title: 'Tyre Finishing Tracker',  sub: 'Multi-row production planning & inventory' },
+  'cut-calculator': { title: 'Cut Calculator',          sub: 'Per-ply breakdown with fabric thickness correction' },
+  'master-data':    { title: 'Master Data (Data I)',    sub: 'NTB angles, compound gauge & thickness' },
+  'const-config':   { title: 'CONST Configuration',    sub: 'GT Code master — drum, recipe, plies & compounds' },
+  'settings':       { title: 'Settings & Export',       sub: 'Backup, restore and data management' }
+};
+
+function navigate(pageId, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  const meta = PAGE_META[pageId];
+  document.getElementById('topbar-title').textContent = meta.title;
+  document.getElementById('topbar-sub').textContent   = meta.sub;
+  closeSidebar();
+  window.scrollTo(0, 0);
+}
+
+function openSidebar()  {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' ' + type : '');
+  setTimeout(() => { t.className = ''; }, 2600);
+}
+
+function updateDateTime() {
+  const now = new Date();
+  const dateString = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const dateTimeElement = document.getElementById('current-datetime');
+  if (dateTimeElement) dateTimeElement.textContent = `${dateString} ${timeString}`;
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Boot
+window._ceatData = loadData();
+renderDashboard();
+renderTyreFinishing();
+renderCutCalculator();
+renderMasterData();
+renderConstConfig();
+renderSettings();
+</script>
+</body>
+</html>
